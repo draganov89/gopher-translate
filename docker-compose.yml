@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+  gophertranslate:
+    image: golang:1.14
+    working_dir: /gophertranslate
+    volumes:
+      - ${PWD}:/gophertranslate:rw
+      - ${GOPATH}:/root/go:rw
+    environment:
+      GOPATH: /root/go
+    command: "go run main.go 1234"
+    ports:
+      - 8899:1234
