@@ -1,4 +1,4 @@
-package gopherishRules
+package gopherishPattern
 
 import "regexp"
 
