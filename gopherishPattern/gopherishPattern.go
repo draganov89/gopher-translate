@@ -2,19 +2,26 @@ package gopherishPattern
 
 import "regexp"
 
-var Dictionary map[*regexp.Regexp]string
+var dictionary map[*regexp.Regexp]string
 
-func init() {
-	Dictionary = make(map[*regexp.Regexp]string, 3)
+func GetGopherishDictionary() map[*regexp.Regexp]string {
+
+	if dictionary != nil {
+		return dictionary
+	}
+
+	dictionary = make(map[*regexp.Regexp]string, 3)
 
 	var re *regexp.Regexp
 
-	re = regexp.MustCompile(`^((?:[rRtTpPsSdDfFgGhHjJkKlLzZxXcCvVbBnNmM]{1}qu)|(?:[qQrRtTpPsSdDfFgGhHjJkKlLzZxXcCvVbBnNmM]+))(\w+)([^a-zA-Z]*)$`)
-	Dictionary[re] = "${2}${1}ogo${4}"
+	re = regexp.MustCompile(`^(?:(x|(?:(?:x[^r]|[^xaeiouyw])[trpsdfghjklzxcvbnm]*)|[trpsdfghjklzxcvbnm]qu)([aeiouyw]+\w*)([^a-zA-Z]*))$`)
+	dictionary[re] = "${2}${1}ogo${3}"
 
-	re = regexp.MustCompile(`^([aAeEiIoOuUyYwW]+\w+[^a-zA-Z]*)$`)
-	Dictionary[re] = "g${1}"
+	re = regexp.MustCompile(`^([aeiouyw]+\w*[^a-z]*)$`)
+	dictionary[re] = "g${1}"
 
 	re = regexp.MustCompile(`^(xr\w+[^a-zA-Z]*)$`)
-	Dictionary[re] = "ge${1}"
+	dictionary[re] = "ge${1}"
+
+	return dictionary
 }
