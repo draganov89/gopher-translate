@@ -1,8 +1,10 @@
 package patternTranslate
 
 import (
+	"fmt"
 	"regexp"
 	"sort"
+	"strings"
 )
 
 type Record struct {
@@ -21,6 +23,8 @@ func CreateTranslator(dictionary map[*regexp.Regexp]string) *Translator {
 }
 
 func (t *Translator) TranslateWord(englishWord string) string {
+
+	englishWord = strings.ToLower(englishWord)
 	translated := englishWord
 	for k, v := range t.patterns {
 		match := k.MatchString(englishWord)
@@ -31,6 +35,20 @@ func (t *Translator) TranslateWord(englishWord string) string {
 	}
 	t.addToHistory(englishWord, translated)
 	return translated
+}
+
+func (t *Translator) TranslateSentence(englishSentence string) string {
+	words := strings.Split(englishSentence, " ")
+
+	var strBuilder strings.Builder
+	// first word first letter should be capital
+	strBuilder.WriteString(strings.Title(t.TranslateWord(words[0])))
+
+	for i := 1; i < len(words); i++ {
+		fmt.Fprintf(&strBuilder, " %s", t.TranslateWord(words[i]))
+	}
+
+	return strBuilder.String()
 }
 
 func (t *Translator) addToHistory(eng, goph string) {
