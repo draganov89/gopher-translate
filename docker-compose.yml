@@ -8,6 +8,6 @@ services:
       - ${GOPATH}:/root/go:rw
     environment:
       GOPATH: /root/go
-    command: "go run main.go 1234"
+    command: "go run main.go --port 1234"
     ports:
       - 8899:1234

@@ -13,7 +13,7 @@ func main() {
 
 	// No need for named parameters
 	// such as '--port or -p'
-	port := fmt.Sprintf(":%s", os.Args[1])
+	port := fmt.Sprintf(":%s", os.Args[2])
 
 	// ancient gopherish dictionary
 	gDict := gp.GetGopherishDictionary()
