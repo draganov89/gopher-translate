@@ -13,10 +13,9 @@ type service struct {
 
 // CreateService is a constructo function that initializes
 // a new service object
-func CreateService(t *pt.Translator) *service {
+func CreateService(t pt.ITranslator) *service {
 
-	newMux := http.NewServeMux()
-	handler := sh.CreateServiceHandler(t, newMux)
+	handler := sh.CreateServiceHandler(t)
 
 	service := &service{handler}
 

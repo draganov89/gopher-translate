@@ -7,6 +7,12 @@ import (
 	"strings"
 )
 
+type ITranslator interface {
+	TranslateWord(string) string
+	TranslateSentence(string) string
+	GetSortedHistory() *History
+}
+
 // Translator encapsulates the
 // translation functionality
 type Translator struct {
@@ -15,7 +21,7 @@ type Translator struct {
 	histKeys     []string
 }
 
-type history struct {
+type History struct {
 	History []map[string]string `json:"history"`
 }
 
@@ -55,13 +61,13 @@ func (t *Translator) TranslateSentence(englishSentence string) string {
 
 // GetSortedHistory returns a history object that
 // represents the sorted history of all translations
-func (t *Translator) GetSortedHistory() *history {
+func (t *Translator) GetSortedHistory() *History {
 
 	sort.Slice(t.histKeys, func(p, q int) bool {
 		return t.histKeys[p] < t.histKeys[q]
 	})
 
-	hist := &history{make([]map[string]string, 0, len(t.histKeys))}
+	hist := &History{make([]map[string]string, 0, len(t.histKeys))}
 
 	for _, key := range t.histKeys {
 		newMap := map[string]string{

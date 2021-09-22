@@ -12,13 +12,14 @@ import (
 // ServiceHandler object encapsulates
 // the handlers and routings functionality
 type ServiceHandler struct {
-	translator *pt.Translator
+	translator pt.ITranslator
 	serveMux   *http.ServeMux
 }
 
 // CreateServiceHandler is a constructor function that
 // initializes a new ServiceHandler object
-func CreateServiceHandler(transl *pt.Translator, mux *http.ServeMux) *ServiceHandler {
+func CreateServiceHandler(transl pt.ITranslator) *ServiceHandler {
+	mux := http.NewServeMux()
 	handler := &ServiceHandler{transl, mux}
 
 	handler.serveMux.HandleFunc("/word", handler.TranslateWord)
@@ -71,9 +72,9 @@ func (s *ServiceHandler) TranslateSentence(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	var reqArg map[string]string
+	var reqArgMap map[string]string
 
-	err = json.Unmarshal(body, &reqArg)
+	err = json.Unmarshal(body, &reqArgMap)
 
 	if err != nil {
 		fmt.Println("Error parsing the request body!")
@@ -81,7 +82,7 @@ func (s *ServiceHandler) TranslateSentence(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	sentence, ok := reqArg["english_sentence"]
+	sentence, ok := reqArgMap["english_sentence"]
 	if !ok {
 		fmt.Println("Error - request body not in the correct format!")
 		w.WriteHeader(http.StatusBadRequest)
@@ -90,13 +91,11 @@ func (s *ServiceHandler) TranslateSentence(w http.ResponseWriter, r *http.Reques
 
 	translated := s.translator.TranslateSentence(sentence)
 
-	resultObj := struct {
-		Gopher_sentence string `json:"gopher_sentence"`
-	}{
-		translated,
+	respMap := map[string]string{
+		"english_sentence": translated,
 	}
 
-	bytesRes, err := json.Marshal(resultObj)
+	bytesRes, err := json.Marshal(respMap)
 	if err != nil {
 		fmt.Println("Error marshaling the response object!")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -142,13 +141,11 @@ func (s *ServiceHandler) TranslateWord(w http.ResponseWriter, r *http.Request) {
 
 	translated := s.translator.TranslateWord(word)
 
-	resultObj := struct {
-		Gopher_word string `json:"gopher_word"`
-	}{
-		translated,
+	respMap := map[string]string{
+		"english_word": translated,
 	}
 
-	bytesRes, err := json.Marshal(resultObj)
+	bytesRes, err := json.Marshal(respMap)
 	if err != nil {
 		fmt.Println("Error marshaling the response object!")
 		w.WriteHeader(http.StatusInternalServerError)
