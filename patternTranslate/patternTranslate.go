@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-// Translator is an object that encapsulates
-// the translation functionality
+// Translator encapsulates the
+// translation functionality
 type Translator struct {
 	patterns     map[*regexp.Regexp]string
 	translations map[string]string
