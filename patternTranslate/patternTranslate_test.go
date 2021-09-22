@@ -18,7 +18,10 @@ func TestTranslator_GetSortedHistory(t *testing.T) {
 	_ = tr.TranslateWord("world")
 	_ = tr.TranslateWord("old")
 
-	expect := []pt.Record{
+	expect := []struct {
+		eng    string
+		gopher string
+	}{
 		{"apple", "gapple"},
 		{"cosmos", "osmoscogo"},
 		{"old", "gold"},
@@ -27,18 +30,20 @@ func TestTranslator_GetSortedHistory(t *testing.T) {
 		{"xray", "gexray"},
 	}
 
-	got := tr.GetSortedHistory()
+	hist := tr.GetSortedHistory()
 
-	if len(got) != len(expect) {
-		t.Error("Lenght of expected slice is different then the lenght of got slice!")
+	if len(hist.History) != len(expect) {
+		t.Errorf("Lenght of expected slice is different then the lenght of got slice! Expected %v, got %v", len(expect), len(hist.History))
+		t.FailNow()
 	}
 
-	for ind := 0; ind < len(got); ind++ {
-		if expect[ind] != got[ind] {
-			t.Errorf("Element at position %d does not match! Expected %q, got %q", ind, expect[ind], got[ind])
+	for ind, word := range expect {
+		for k, v := range hist.History[ind] {
+			if word.eng != k || word.gopher != v {
+				t.Errorf("Element at position %d does not match! Expected {%q: %q}, got {%q: %q}", ind, word.eng, word.gopher, k, v)
+			}
 		}
 	}
-
 }
 
 func TestTranslator_TranslateWord(t *testing.T) {
@@ -64,6 +69,31 @@ func TestTranslator_TranslateWord(t *testing.T) {
 			got := tr.TranslateWord(tt.word)
 			if got != tt.want {
 				t.Errorf("Translator.TranslateWord() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestTranslator_TranslateSentence(t *testing.T) {
+
+	gDict := gp.GetGopherishDictionary()
+	tr := pt.CreateTranslator(gDict)
+
+	tests := []struct {
+		name     string
+		sentence string
+		want     string
+	}{
+		{"Sentence 1", "Hello my friend...", "Ellohogo ymogo iendfrogo..."},
+		{"Sentence 2", "Be careful gopher!", "Ebogo arefulcogo ophergogo!"},
+		{"Sentence 3", "Xray is xray, you just stand still!", "Gexray gis gexray, gyou ustjogo andstogo illstogo!"},
+		{"One word Sentence", "Hello!", "Ellohogo!"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tr.TranslateSentence(tt.sentence)
+			if got != tt.want {
+				t.Errorf("Translator.TranslateSentence() = %v, want %v", got, tt.want)
 			}
 		})
 	}

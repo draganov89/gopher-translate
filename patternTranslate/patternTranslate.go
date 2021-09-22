@@ -7,24 +7,30 @@ import (
 	"strings"
 )
 
-type Record struct {
-	EngWord    string
-	GopherWord string
-}
-
 type Translator struct {
 	patterns map[*regexp.Regexp]string
-	history  []Record
+	searches map[string]string
+	histKeys []string
+}
+
+type history struct {
+	History []map[string]string `json:"history"`
 }
 
 func CreateTranslator(dictionary map[*regexp.Regexp]string) *Translator {
-	t := &Translator{dictionary, make([]Record, 0)}
+	t := &Translator{dictionary, map[string]string{}, []string{}}
 	return t
 }
 
 func (t *Translator) TranslateWord(englishWord string) string {
+	translated := t.translateWord(englishWord)
+	t.addToHistory(englishWord, translated)
+	return translated
+}
 
+func (t *Translator) translateWord(englishWord string) string {
 	englishWord = strings.ToLower(englishWord)
+
 	translated := englishWord
 	for k, v := range t.patterns {
 		match := k.MatchString(englishWord)
@@ -33,7 +39,6 @@ func (t *Translator) TranslateWord(englishWord string) string {
 			break
 		}
 	}
-	t.addToHistory(englishWord, translated)
 	return translated
 }
 
@@ -41,26 +46,38 @@ func (t *Translator) TranslateSentence(englishSentence string) string {
 	words := strings.Split(englishSentence, " ")
 
 	var strBuilder strings.Builder
-	// first word first letter should be capital
-	strBuilder.WriteString(strings.Title(t.TranslateWord(words[0])))
+
+	// first letter of first word should be capital
+	strBuilder.WriteString(strings.Title(t.translateWord(words[0])))
 
 	for i := 1; i < len(words); i++ {
-		fmt.Fprintf(&strBuilder, " %s", t.TranslateWord(words[i]))
+		fmt.Fprintf(&strBuilder, " %s", t.translateWord(words[i]))
 	}
 
-	return strBuilder.String()
+	translated := strBuilder.String()
+	t.addToHistory(englishSentence, translated)
+	return translated
 }
 
 func (t *Translator) addToHistory(eng, goph string) {
-	t.history = append(t.history, Record{eng, goph})
+	t.histKeys = append(t.histKeys, eng)
+	t.searches[eng] = goph
 }
 
-func (t *Translator) GetSortedHistory() []Record {
-	sort.Slice(t.history, func(p, q int) bool {
-		return t.history[p].EngWord < t.history[q].EngWord
+func (t *Translator) GetSortedHistory() *history {
+
+	sort.Slice(t.histKeys, func(p, q int) bool {
+		return t.histKeys[p] < t.histKeys[q]
 	})
 
-	result := make([]Record, len(t.history))
-	copy(result, t.history)
-	return result
+	hist := &history{make([]map[string]string, 0, len(t.histKeys))}
+
+	for _, key := range t.histKeys {
+		newMap := map[string]string{
+			key: t.searches[key],
+		}
+		hist.History = append(hist.History, newMap)
+	}
+
+	return hist
 }
