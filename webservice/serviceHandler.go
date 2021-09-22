@@ -14,6 +14,26 @@ type ServiceHandler struct {
 	serveMux   *http.ServeMux
 }
 
+func (s *ServiceHandler) getTranslationHistory(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	translated := s.translator.GetSortedHistory()
+
+	bytesRes, err := json.Marshal(translated)
+	if err != nil {
+		fmt.Println("Error marshaling the response object!")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(bytesRes)
+
+}
+
 func (s *ServiceHandler) translateSentence(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusNotFound)
