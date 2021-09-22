@@ -7,10 +7,12 @@ import (
 	"strings"
 )
 
+// Translator is an object that encapsulates
+// the translation functionality
 type Translator struct {
-	patterns map[*regexp.Regexp]string
-	searches map[string]string
-	histKeys []string
+	patterns     map[*regexp.Regexp]string
+	translations map[string]string
+	histKeys     []string
 }
 
 type history struct {
@@ -18,7 +20,7 @@ type history struct {
 }
 
 // CreateTranslator is a constructor func that initializes
-// new Translator object
+// a new Translator object
 func CreateTranslator(dictionary map[*regexp.Regexp]string) *Translator {
 	t := &Translator{dictionary, map[string]string{}, []string{}}
 	return t
@@ -52,7 +54,7 @@ func (t *Translator) TranslateSentence(englishSentence string) string {
 }
 
 // GetSortedHistory returns a history object that
-// represents the sorted history of all searches
+// represents the sorted history of all translations
 func (t *Translator) GetSortedHistory() *history {
 
 	sort.Slice(t.histKeys, func(p, q int) bool {
@@ -63,7 +65,7 @@ func (t *Translator) GetSortedHistory() *history {
 
 	for _, key := range t.histKeys {
 		newMap := map[string]string{
-			key: t.searches[key],
+			key: t.translations[key],
 		}
 		hist.History = append(hist.History, newMap)
 	}
@@ -73,7 +75,7 @@ func (t *Translator) GetSortedHistory() *history {
 
 func (t *Translator) addToHistory(eng, goph string) {
 	t.histKeys = append(t.histKeys, eng)
-	t.searches[eng] = goph
+	t.translations[eng] = goph
 }
 
 func (t *Translator) translateWord(englishWord string) string {

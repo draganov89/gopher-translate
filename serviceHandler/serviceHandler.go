@@ -9,11 +9,15 @@ import (
 	pt "github.com/draganov89/gopher-translate/patternTranslate"
 )
 
+// ServiceHandler object encapsulates
+// the handlers and routings functionality
 type ServiceHandler struct {
 	translator *pt.Translator
 	serveMux   *http.ServeMux
 }
 
+// CreateServiceHandler is a constructor function that
+// initializes a new ServiceHandler object
 func CreateServiceHandler(transl *pt.Translator, mux *http.ServeMux) *ServiceHandler {
 	handler := &ServiceHandler{transl, mux}
 
@@ -24,10 +28,14 @@ func CreateServiceHandler(transl *pt.Translator, mux *http.ServeMux) *ServiceHan
 	return handler
 }
 
+// GetServiceMux is a getter function for the serveMux
+// unexported field
 func (s *ServiceHandler) GetServiceMux() *http.ServeMux {
 	return s.serveMux
 }
 
+// GetTranslationHistory is a handler responsible for the "/history" endpoint.
+// Returning the history of all translations in json format.
 func (s *ServiceHandler) GetTranslationHistory(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusNotFound)
@@ -45,9 +53,10 @@ func (s *ServiceHandler) GetTranslationHistory(w http.ResponseWriter, r *http.Re
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(bytesRes)
-
 }
 
+// TranslateSentence is a handler responsible for the "/sentence" endpoint.
+// Returning the translated sentence in gopher language.
 func (s *ServiceHandler) TranslateSentence(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusNotFound)
@@ -97,6 +106,8 @@ func (s *ServiceHandler) TranslateSentence(w http.ResponseWriter, r *http.Reques
 	w.Write(bytesRes)
 }
 
+// TranslateWord is a handler responsible for the "/word" endpoint.
+// Returning the translated word in gopher language.
 func (s *ServiceHandler) TranslateWord(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusNotFound)

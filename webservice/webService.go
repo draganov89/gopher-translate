@@ -11,6 +11,8 @@ type service struct {
 	handler *sh.ServiceHandler
 }
 
+// CreateService is a constructo function that initializes
+// a new service object
 func CreateService(t *pt.Translator) *service {
 
 	newMux := http.NewServeMux()
@@ -21,6 +23,7 @@ func CreateService(t *pt.Translator) *service {
 	return service
 }
 
+// ListenAndServe starts a new service listener
 func (s *service) ListenAndServe(port string) {
 	http.ListenAndServe(port, s.handler.GetServiceMux())
 }

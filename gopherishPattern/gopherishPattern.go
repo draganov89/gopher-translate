@@ -4,6 +4,7 @@ import "regexp"
 
 var dictionary map[*regexp.Regexp]string
 
+// GetGopherishDictionary returns the pattern translation rules
 func GetGopherishDictionary() map[*regexp.Regexp]string {
 
 	if dictionary != nil {
