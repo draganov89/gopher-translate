@@ -17,31 +17,23 @@ type history struct {
 	History []map[string]string `json:"history"`
 }
 
+// CreateTranslator is a constructor func that initializes
+// new Translator object
 func CreateTranslator(dictionary map[*regexp.Regexp]string) *Translator {
 	t := &Translator{dictionary, map[string]string{}, []string{}}
 	return t
 }
 
+// TranslateWord gets an english word and returns the
+// word translated in gopher
 func (t *Translator) TranslateWord(englishWord string) string {
 	translated := t.translateWord(englishWord)
 	t.addToHistory(englishWord, translated)
 	return translated
 }
 
-func (t *Translator) translateWord(englishWord string) string {
-	englishWord = strings.ToLower(englishWord)
-
-	translated := englishWord
-	for k, v := range t.patterns {
-		match := k.MatchString(englishWord)
-		if match {
-			translated = k.ReplaceAllString(englishWord, v)
-			break
-		}
-	}
-	return translated
-}
-
+// TranslateSentence gets an english sentence and
+// returns the sentence translated in gopher
 func (t *Translator) TranslateSentence(englishSentence string) string {
 	words := strings.Split(englishSentence, " ")
 
@@ -59,11 +51,8 @@ func (t *Translator) TranslateSentence(englishSentence string) string {
 	return translated
 }
 
-func (t *Translator) addToHistory(eng, goph string) {
-	t.histKeys = append(t.histKeys, eng)
-	t.searches[eng] = goph
-}
-
+// GetSortedHistory returns a history object that
+// represents the sorted history of all searches
 func (t *Translator) GetSortedHistory() *history {
 
 	sort.Slice(t.histKeys, func(p, q int) bool {
@@ -80,4 +69,23 @@ func (t *Translator) GetSortedHistory() *history {
 	}
 
 	return hist
+}
+
+func (t *Translator) addToHistory(eng, goph string) {
+	t.histKeys = append(t.histKeys, eng)
+	t.searches[eng] = goph
+}
+
+func (t *Translator) translateWord(englishWord string) string {
+	englishWord = strings.ToLower(englishWord)
+
+	translated := englishWord
+	for k, v := range t.patterns {
+		match := k.MatchString(englishWord)
+		if match {
+			translated = k.ReplaceAllString(englishWord, v)
+			break
+		}
+	}
+	return translated
 }
