@@ -47,8 +47,9 @@ func (s *ServiceHandler) GetTranslationHistory(w http.ResponseWriter, r *http.Re
 
 	bytesRes, err := json.Marshal(translated)
 	if err != nil {
-		fmt.Println("Error marshaling the response object!")
+		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Something went unexpectedly wrong! (It works on my machine...)"))
 		return
 	}
 
@@ -67,8 +68,9 @@ func (s *ServiceHandler) TranslateSentence(w http.ResponseWriter, r *http.Reques
 	defer r.Body.Close()
 
 	if err != nil {
-		fmt.Println("Error occured while reading request body!")
+		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
 		return
 	}
 
@@ -77,28 +79,31 @@ func (s *ServiceHandler) TranslateSentence(w http.ResponseWriter, r *http.Reques
 	err = json.Unmarshal(body, &reqArgMap)
 
 	if err != nil {
-		fmt.Println("Error parsing the request body!")
+		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
 		return
 	}
 
 	sentence, ok := reqArgMap["english_sentence"]
 	if !ok {
-		fmt.Println("Error - request body not in the correct format!")
+		fmt.Printf("Invalid json property!")
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Invalid JSON request!"))
 		return
 	}
 
 	translated := s.translator.TranslateSentence(sentence)
 
 	respMap := map[string]string{
-		"english_sentence": translated,
+		"gopher_sentence": translated,
 	}
 
 	bytesRes, err := json.Marshal(respMap)
 	if err != nil {
-		fmt.Println("Error marshaling the response object!")
+		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Something went unexpectedly wrong! (It works on my machine...)"))
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -117,8 +122,9 @@ func (s *ServiceHandler) TranslateWord(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	if err != nil {
-		fmt.Println("Error occured while reading request body!")
+		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
 		return
 	}
 
@@ -127,28 +133,31 @@ func (s *ServiceHandler) TranslateWord(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &reqArg)
 
 	if err != nil {
-		fmt.Println("Error parsing the request body!")
+		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
 		return
 	}
 
 	word, ok := reqArg["english_word"]
 	if !ok {
-		fmt.Println("Error - request body not in the correct format!")
+		fmt.Printf("Invalid json property!")
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Invalid JSON request!"))
 		return
 	}
 
 	translated := s.translator.TranslateWord(word)
 
 	respMap := map[string]string{
-		"english_word": translated,
+		"gopher_word": translated,
 	}
 
 	bytesRes, err := json.Marshal(respMap)
 	if err != nil {
-		fmt.Println("Error marshaling the response object!")
+		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Something went unexpectedly wrong! (It works on my machine...)"))
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
