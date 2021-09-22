@@ -18,6 +18,7 @@ func CreateService(t *pt.Translator) *service {
 
 	handler.serveMux.HandleFunc("/word", handler.translateWord)
 	handler.serveMux.HandleFunc("/sentence", handler.translateSentence)
+	handler.serveMux.HandleFunc("/history", handler.getTranslationHistory)
 
 	service := &service{handler}
 

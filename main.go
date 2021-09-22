@@ -6,7 +6,7 @@ import (
 
 	gp "github.com/draganov89/gopher-translate/gopherishPattern"
 	pt "github.com/draganov89/gopher-translate/patternTranslate"
-	ws "github.com/draganov89/gopher-translate/webService"
+	ws "github.com/draganov89/gopher-translate/webservice"
 )
 
 func main() {
