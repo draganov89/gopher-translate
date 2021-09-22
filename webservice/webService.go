@@ -4,21 +4,17 @@ import (
 	"net/http"
 
 	pt "github.com/draganov89/gopher-translate/patternTranslate"
+	sh "github.com/draganov89/gopher-translate/serviceHandler"
 )
 
 type service struct {
-	handler *ServiceHandler
+	handler *sh.ServiceHandler
 }
 
 func CreateService(t *pt.Translator) *service {
 
 	newMux := http.NewServeMux()
-
-	handler := &ServiceHandler{t, newMux}
-
-	handler.serveMux.HandleFunc("/word", handler.translateWord)
-	handler.serveMux.HandleFunc("/sentence", handler.translateSentence)
-	handler.serveMux.HandleFunc("/history", handler.getTranslationHistory)
+	handler := sh.CreateServiceHandler(t, newMux)
 
 	service := &service{handler}
 
@@ -26,5 +22,5 @@ func CreateService(t *pt.Translator) *service {
 }
 
 func (s *service) ListenAndServe(port string) {
-	http.ListenAndServe(port, s.handler.serveMux)
+	http.ListenAndServe(port, s.handler.GetServiceMux())
 }

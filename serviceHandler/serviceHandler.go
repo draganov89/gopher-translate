@@ -1,4 +1,4 @@
-package webservice
+package serviceHandler
 
 import (
 	"encoding/json"
@@ -14,7 +14,21 @@ type ServiceHandler struct {
 	serveMux   *http.ServeMux
 }
 
-func (s *ServiceHandler) getTranslationHistory(w http.ResponseWriter, r *http.Request) {
+func CreateServiceHandler(transl *pt.Translator, mux *http.ServeMux) *ServiceHandler {
+	handler := &ServiceHandler{transl, mux}
+
+	handler.serveMux.HandleFunc("/word", handler.TranslateWord)
+	handler.serveMux.HandleFunc("/sentence", handler.TranslateSentence)
+	handler.serveMux.HandleFunc("/history", handler.GetTranslationHistory)
+
+	return handler
+}
+
+func (s *ServiceHandler) GetServiceMux() *http.ServeMux {
+	return s.serveMux
+}
+
+func (s *ServiceHandler) GetTranslationHistory(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -34,7 +48,7 @@ func (s *ServiceHandler) getTranslationHistory(w http.ResponseWriter, r *http.Re
 
 }
 
-func (s *ServiceHandler) translateSentence(w http.ResponseWriter, r *http.Request) {
+func (s *ServiceHandler) TranslateSentence(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -83,7 +97,7 @@ func (s *ServiceHandler) translateSentence(w http.ResponseWriter, r *http.Reques
 	w.Write(bytesRes)
 }
 
-func (s *ServiceHandler) translateWord(w http.ResponseWriter, r *http.Request) {
+func (s *ServiceHandler) TranslateWord(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusNotFound)
 		return
