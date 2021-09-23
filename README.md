@@ -8,6 +8,6 @@ The project represents a service that exposes an API for translating english wor
 
 The API consists of three endpoints:
 
-* /word     for translating a single word
-* /sentence for translating a whole sentence
-* /history  for retrieving a history of all translations (sorted alphabetically by the english word/sentence)
+* `/word`     for translating a single word
+* `/sentence` for translating a whole sentence
+* `/history`  for retrieving a history of all translations (sorted alphabetically by the english word/sentence)
