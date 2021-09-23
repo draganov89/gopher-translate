@@ -11,9 +11,15 @@ import (
 
 func main() {
 
-	// No need for named parameters
-	// such as '--port or -p'
-	port := fmt.Sprintf(":%s", os.Args[2])
+	defPort := "8899"
+	var port string
+	if len(os.Args) < 3 {
+		fmt.Printf("Missing argument '--port'! Default port will be used :%v\n", defPort)
+		port = defPort
+	} else {
+		port = os.Args[2]
+	}
+	port = fmt.Sprintf(":%s", port)
 
 	// ancient gopherish dictionary
 	gDict := gp.GetGopherishDictionary()
