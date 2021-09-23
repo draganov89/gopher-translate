@@ -11,14 +11,11 @@ type service struct {
 	handler *sh.ServiceHandler
 }
 
-// CreateService is a constructo function that initializes
+// CreateService is a constructor function that initializes
 // a new service object
 func CreateService(t pt.ITranslator) *service {
-
 	handler := sh.CreateServiceHandler(t)
-
 	service := &service{handler}
-
 	return service
 }
 

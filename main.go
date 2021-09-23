@@ -21,7 +21,6 @@ func main() {
 	}
 	port = fmt.Sprintf(":%s", port)
 
-	// ancient gopherish dictionary
 	gDict := gp.GetGopherishDictionary()
 	gTranslator := pt.CreateTranslator(gDict)
 	service := ws.CreateService(gTranslator)

@@ -11,12 +11,11 @@ func TestTranslator_GetSortedHistory(t *testing.T) {
 	gDict := gp.GetGopherishDictionary()
 	tr := pt.CreateTranslator(gDict)
 
-	_ = tr.TranslateWord("cosmos")
-	_ = tr.TranslateWord("xray")
-	_ = tr.TranslateWord("apple")
-	_ = tr.TranslateWord("predator")
-	_ = tr.TranslateWord("world")
-	_ = tr.TranslateWord("old")
+	words := []string{"cosmos", "xray", "apple", "predator", "world", "old"}
+
+	for _, word := range words {
+		_ = tr.TranslateWord(word)
+	}
 
 	expect := []struct {
 		eng    string
