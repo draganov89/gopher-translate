@@ -2,7 +2,7 @@
 
 ## Description
 
-The project represents a service that exposes an API for translating english words and sentences to the ancient gopher language. It uses several translation rules:
+The project represents a service written in GoLang that exposes an API for translating english words and sentences to the ancient gopher language. It uses several translation rules:
 
 The language that the gophers speak is a modified version of English and has a few simple rules:
 
@@ -29,3 +29,11 @@ The API consists of three endpoints:
 ## Installation
 
 The service can be started manually from the terminal by passing a single argument `--port 1234`. In case `--port` argument is not found the program will use the default port `8899`. There is also support for `docker-compose` command which will create a container and run the application inside it. `docker-compose up` will run the service on port `1234` (within the container) which will be mapped to the default port `8899` on the host.
+
+## External packages and libraries
+
+For this project no external libraries have been used. I decided to use plain vanilla Go language with the stuff provided in the standard library. It was hell of a fun!
+
+## License
+
+Please refer to the LICENSE file in the root directory of the project!
