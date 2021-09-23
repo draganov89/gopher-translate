@@ -2,7 +2,22 @@
 
 ## Description
 
-The project represents a service that exposes an API for translating english words and sentences to the ancient gopher language. 
+The project represents a service that exposes an API for translating english words and sentences to the ancient gopher language. It uses several translation rules:
+
+The language that the gophers speak is a modified version of English and has a few simple rules:
+
+* If a word starts with a vowel letter, add prefix g to the word:
+`apple -> gapple
+ear -> gear
+oak -> goak
+user -> guser`
+* If a word starts with the consonant letters xr , add the prefix ge to the beginning of the word:
+`xray -> gexray`
+* If a word starts with a consonant sound, move it to the end of the word and then add ogo suffix to the word. Consonant sounds can be made up of multiple
+consonants i.e., a consonant cluster:
+`chair -> airchogo`
+* If a word starts with a consonant sound followed by qu , move it to the end of the word, and then add ogo suffix to the word:
+`square -> aresquogo`
 
 ## Endpoints
 
