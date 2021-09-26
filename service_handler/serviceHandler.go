@@ -1,4 +1,4 @@
-package serviceHandler
+package service_handler
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	pt "github.com/draganov89/gopher-translate/patternTranslate"
+	pt "github.com/draganov89/gopher-translate/pattern_translate"
 )
 
 // ServiceHandler object encapsulates

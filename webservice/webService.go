@@ -3,8 +3,8 @@ package webservice
 import (
 	"net/http"
 
-	pt "github.com/draganov89/gopher-translate/patternTranslate"
-	sh "github.com/draganov89/gopher-translate/serviceHandler"
+	pt "github.com/draganov89/gopher-translate/pattern_translate"
+	sh "github.com/draganov89/gopher-translate/service_handler"
 )
 
 type service struct {

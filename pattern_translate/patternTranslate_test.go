@@ -1,10 +1,10 @@
-package patternTranslate_test
+package pattern_translate_test
 
 import (
 	"testing"
 
-	gp "github.com/draganov89/gopher-translate/gopherishPattern"
-	pt "github.com/draganov89/gopher-translate/patternTranslate"
+	gp "github.com/draganov89/gopher-translate/gopherish_pattern"
+	pt "github.com/draganov89/gopher-translate/pattern_translate"
 )
 
 func TestTranslator_GetSortedHistory(t *testing.T) {

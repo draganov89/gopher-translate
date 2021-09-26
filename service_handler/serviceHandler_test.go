@@ -1,4 +1,4 @@
-package serviceHandler_test
+package service_handler_test
 
 import (
 	"io"
@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	pt "github.com/draganov89/gopher-translate/patternTranslate"
-	sh "github.com/draganov89/gopher-translate/serviceHandler"
+	pt "github.com/draganov89/gopher-translate/pattern_translate"
+	sh "github.com/draganov89/gopher-translate/service_handler"
 )
 
 type TranslatorMock struct{}

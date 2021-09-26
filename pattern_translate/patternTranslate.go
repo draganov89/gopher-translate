@@ -1,9 +1,8 @@
-package patternTranslate
+package pattern_translate
 
 import (
 	"fmt"
 	"regexp"
-	"sort"
 	"strings"
 )
 
@@ -16,9 +15,8 @@ type ITranslator interface {
 // Translator encapsulates the
 // translation functionality
 type Translator struct {
-	patterns     map[*regexp.Regexp]string
-	translations map[string]string
-	histKeys     []string
+	patterns map[*regexp.Regexp]string
+	history  *HistoryHandler
 }
 
 type History struct {
@@ -28,7 +26,10 @@ type History struct {
 // CreateTranslator is a constructor func that initializes
 // a new Translator object
 func CreateTranslator(dictionary map[*regexp.Regexp]string) *Translator {
-	t := &Translator{dictionary, map[string]string{}, []string{}}
+	t := &Translator{dictionary, &HistoryHandler{
+		translations: map[string]string{},
+		keys:         []string{},
+	}}
 	return t
 }
 
@@ -36,7 +37,7 @@ func CreateTranslator(dictionary map[*regexp.Regexp]string) *Translator {
 // word translated in gopher
 func (t *Translator) TranslateWord(englishWord string) string {
 	translated := t.translateWord(englishWord)
-	t.addToHistory(englishWord, translated)
+	t.history.addToHistory(englishWord, translated)
 	return translated
 }
 
@@ -55,7 +56,7 @@ func (t *Translator) TranslateSentence(englishSentence string) string {
 	}
 
 	translated := strBuilder.String()
-	t.addToHistory(englishSentence, translated)
+	t.history.addToHistory(englishSentence, translated)
 	return translated
 }
 
@@ -63,25 +64,17 @@ func (t *Translator) TranslateSentence(englishSentence string) string {
 // represents the sorted history of all translations
 func (t *Translator) GetSortedHistory() *History {
 
-	sort.Slice(t.histKeys, func(p, q int) bool {
-		return t.histKeys[p] < t.histKeys[q]
-	})
+	hist := &History{make([]map[string]string, 0, len(t.history.keys))}
+	t.history.sortKeys()
 
-	hist := &History{make([]map[string]string, 0, len(t.histKeys))}
-
-	for _, key := range t.histKeys {
+	for _, key := range t.history.keys {
 		newMap := map[string]string{
-			key: t.translations[key],
+			key: t.history.translations[key],
 		}
 		hist.History = append(hist.History, newMap)
 	}
 
 	return hist
-}
-
-func (t *Translator) addToHistory(eng, goph string) {
-	t.histKeys = append(t.histKeys, eng)
-	t.translations[eng] = goph
 }
 
 func (t *Translator) translateWord(englishWord string) string {

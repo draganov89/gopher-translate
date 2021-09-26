@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	gp "github.com/draganov89/gopher-translate/gopherishPattern"
-	pt "github.com/draganov89/gopher-translate/patternTranslate"
+	gp "github.com/draganov89/gopher-translate/gopherish_pattern"
+	pt "github.com/draganov89/gopher-translate/pattern_translate"
 	ws "github.com/draganov89/gopher-translate/webservice"
 )
 
