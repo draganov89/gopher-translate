@@ -13,11 +13,11 @@ import (
 
 type TranslatorMock struct{}
 
-func (tr *TranslatorMock) TranslateSentence(sentence string) string {
+func (tr *TranslatorMock) TranslateSentence(sentence string) (string, error) {
 	if sentence == "Apples are green!" {
-		return "Gapples gare eengrogo!"
+		return "Gapples gare eengrogo!", nil
 	}
-	return sentence
+	return sentence, nil
 }
 
 func (tr *TranslatorMock) TranslateWord(word string) string {

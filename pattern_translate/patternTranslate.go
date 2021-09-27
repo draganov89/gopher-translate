@@ -2,13 +2,14 @@ package pattern_translate
 
 import (
 	"fmt"
+	"log"
 	"regexp"
 	"strings"
 )
 
 type ITranslator interface {
 	TranslateWord(string) string
-	TranslateSentence(string) string
+	TranslateSentence(string) (string, error)
 	GetSortedHistory() *History
 }
 
@@ -26,10 +27,15 @@ type History struct {
 // CreateTranslator is a constructor func that initializes
 // a new Translator object
 func CreateTranslator(dictionary map[*regexp.Regexp]string) *Translator {
-	t := &Translator{dictionary, &HistoryHandler{
-		translations: map[string]string{},
-		keys:         []string{},
-	}}
+	if dictionary == nil {
+		log.Fatalln("Dictionary argument of CreateTranslator can not be nil!")
+	}
+	t := &Translator{
+		dictionary,
+		&HistoryHandler{
+			translations: map[string]string{},
+			keys:         []string{},
+		}}
 	return t
 }
 
@@ -43,13 +49,17 @@ func (t *Translator) TranslateWord(englishWord string) string {
 
 // TranslateSentence gets an english sentence and
 // returns the sentence translated in gopher
-func (t *Translator) TranslateSentence(englishSentence string) string {
+func (t *Translator) TranslateSentence(englishSentence string) (string, error) {
 	words := strings.Split(englishSentence, " ")
 
 	var strBuilder strings.Builder
 
 	// first letter of first word should be capital
-	strBuilder.WriteString(strings.Title(t.translateWord(words[0])))
+	_, err := strBuilder.WriteString(strings.Title(t.translateWord(words[0])))
+
+	if err != nil {
+		return "", err
+	}
 
 	for i := 1; i < len(words); i++ {
 		fmt.Fprintf(&strBuilder, " %s", t.translateWord(words[i]))
@@ -57,7 +67,7 @@ func (t *Translator) TranslateSentence(englishSentence string) string {
 
 	translated := strBuilder.String()
 	t.history.addToHistory(englishSentence, translated)
-	return translated
+	return translated, nil
 }
 
 // GetSortedHistory returns a history object that

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	gp "github.com/draganov89/gopher-translate/gopherish_pattern"
@@ -14,7 +15,7 @@ func main() {
 	defPort := "8899"
 	var port string
 	if len(os.Args) < 3 {
-		fmt.Printf("Missing argument '--port'! Default port will be used :%v\n", defPort)
+		log.Fatalf("Missing argument '--port'! Default port will be used :%v\n", defPort)
 		port = defPort
 	} else {
 		port = os.Args[2]
@@ -25,5 +26,6 @@ func main() {
 	gTranslator := pt.CreateTranslator(gDict)
 	service := ws.CreateService(gTranslator)
 
-	service.ListenAndServe(port)
+	log.Println("Starting service ...")
+	log.Fatal(service.ListenAndServe(port))
 }

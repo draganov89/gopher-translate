@@ -1,6 +1,7 @@
 package webservice
 
 import (
+	"log"
 	"net/http"
 
 	pt "github.com/draganov89/gopher-translate/pattern_translate"
@@ -14,12 +15,15 @@ type service struct {
 // CreateService is a constructor function that initializes
 // a new service object
 func CreateService(t pt.ITranslator) *service {
+	if t == nil {
+		log.Fatalln("Translator argument should not be nil!")
+	}
 	handler := sh.CreateServiceHandler(t)
 	service := &service{handler}
 	return service
 }
 
 // ListenAndServe starts a new service listener
-func (s *service) ListenAndServe(port string) {
-	http.ListenAndServe(port, s.handler.GetServiceMux())
+func (s *service) ListenAndServe(port string) error {
+	return http.ListenAndServe(port, s.handler.GetServiceMux())
 }

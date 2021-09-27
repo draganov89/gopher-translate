@@ -1,6 +1,7 @@
 package pattern_translate
 
 import (
+	"log"
 	"sort"
 	"sync"
 )
@@ -18,6 +19,7 @@ func (h *HistoryHandler) sortKeys() {
 		return h.keys[p] < h.keys[q]
 	})
 	h.keysMux.Unlock()
+	log.Println("Sorted keys: ", h.keys)
 }
 func (h *HistoryHandler) addToHistory(eng, goph string) {
 	h.keysMux.Lock()
@@ -27,4 +29,5 @@ func (h *HistoryHandler) addToHistory(eng, goph string) {
 	h.translMux.Lock()
 	h.translations[eng] = goph
 	h.translMux.Unlock()
+	log.Printf("Added to histor: %v - %v\n", eng, goph)
 }
